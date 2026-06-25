@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Häfele GreenTrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════
+   TOKEN SYSTEM — DARK / LIGHT
+═══════════════════════════════════════ */
+:root {
+  /* brand */
+  --red:        #D60537;
+  --red-dim:    rgba(214,5,55,0.10);
+  --red-glow:   rgba(214,5,55,0.25);
+  --burgundy:   #7A0620;
+  --green:      #00C97A;
+  --green-dim:  rgba(0,201,122,0.10);
+  --gold:       #F0B429;
+  --gold-dim:   rgba(240,180,41,0.11);
+  --blue:       #3D9EFF;
+  --blue-dim:   rgba(61,158,255,0.10);
+  --ease:       cubic-bezier(0.22,1,0.36,1);
+  --r:          16px;
+  --r-sm:       10px;
+}
+
+/* DARK THEME */
+[data-theme="dark"] {
+  --bg:         #0D0D10;
+  --bg1:        #141418;
+  --bg2:        #1C1C22;
+  --bg3:        #25252E;
+  --border:     rgba(255,255,255,0.07);
+  --border2:    rgba(255,255,255,0.13);
+  --text:       #F0F0F5;
+  --text2:      #A0A0B0;
+  --text3:      #5A5A6E;
+  --nav-bg:     rgba(13,13,16,0.90);
+  --bottom-bg:  rgba(10,10,13,0.97);
+  --card-hover: rgba(255,255,255,0.03);
+  --input-bg:   rgba(255,255,255,0.05);
+  --table-alt:  rgba(255,255,255,0.025);
+}
+
+/* LIGHT THEME */
+[data-theme="light"] {
+  --bg:         #F4F4F8;
+  --bg1:        #FFFFFF;
+  --bg2:        #EEEEF3;
+  --bg3:        #E4E4EC;
+  --border:     rgba(0,0,0,0.08);
+  --border2:    rgba(0,0,0,0.14);
+  --text:       #111118;
+  --text2:      #4A4A5E;
+  --text3:      #9A9AB0;
+  --nav-bg:     rgba(244,244,248,0.92);
+  --bottom-bg:  rgba(244,244,248,0.98);
+  --card-hover: rgba(0,0,0,0.02);
+  --input-bg:   rgba(0,0,0,0.04);
+  --table-alt:  rgba(0,0,0,0.025);
+  --red-dim:    rgba(214,5,55,0.08);
+  --green-dim:  rgba(0,201,122,0.08);
+  --gold-dim:   rgba(240,180,41,0.09);
+  --blue-dim:   rgba(61,158,255,0.09);
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans Thai', 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-top: 68px;
+  padding-bottom: 76px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+/* ─── AMBIENT ─── */
+.bg-glow {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.bg-glow::before {
+  content: '';
+  position: absolute;
+  top: -15%; right: -10%;
+  width: 55vw; height: 55vw;
+  background: radial-gradient(circle, rgba(214,5,55,0.06) 0%, transparent 65%);
+}
+.bg-glow::after {
+  content: '';
+  position: absolute;
+  bottom: -10%; left: -8%;
+  width: 48vw; height: 48vw;
+  background: radial-gradient(circle, rgba(0,201,122,0.05) 0%, transparent 65%);
+}
+[data-theme="light"] .bg-glow::before,
+[data-theme="light"] .bg-glow::after { display: none; }
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+.top-nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 68px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  gap: 16px;
+  transition: background 0.3s;
+}
+
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; flex-shrink: 0;
+}
+.logo-mark {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--red), var(--burgundy));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 16px; color: #fff;
+  letter-spacing: -1px;
+}
+.logo-name {
+  font-size: 16px; font-weight: 700; letter-spacing: -0.2px;
+}
+.logo-name em { font-style: normal; color: var(--green); font-weight: 400; }
+
+.nav-pills {
+  display: flex; gap: 2px; align-items: center;
+  overflow-x: auto; scrollbar-width: none;
+}
+.nav-pills::-webkit-scrollbar { display: none; }
+
+.np {
+  font-size: 13.5px; font-weight: 500; color: var(--text2);
+  padding: 7px 15px; border-radius: 100px; cursor: pointer; white-space: nowrap;
+  transition: color 0.18s, background 0.18s;
+}
+.np:hover { color: var(--text); background: var(--bg2); }
+.np.active { color: var(--text); background: var(--bg2); outline: 1px solid var(--border2); }
+
+.nav-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+.theme-btn {
+  width: 36px; height: 36px;
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: var(--text2);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.theme-btn:hover { background: var(--bg3); color: var(--text); }
+
+.login-btn {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13.5px; font-weight: 600;
+  padding: 7px 18px; border-radius: 100px;
+  background: linear-gradient(135deg, var(--red), var(--burgundy));
+  color: #fff; border: none; cursor: pointer;
+  box-shadow: 0 3px 12px rgba(214,5,55,0.28);
+  transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
+  white-space: nowrap;
+}
+.login-btn:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 5px 18px rgba(214,5,55,0.38); }
+
+/* ─── BOTTOM NAV ─── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
+  background: var(--bottom-bg);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border);
+  display: none; justify-content: space-around; align-items: center;
+  z-index: 999; padding: 0 6px;
+}
+.bnav {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  color: var(--text3); font-size: 10px; font-weight: 500; cursor: pointer;
+  padding: 8px 14px; border-radius: 10px; transition: color 0.18s;
+}
+.bnav i { font-size: 18px; }
+.bnav.active { color: var(--red); }
+
+/* ═══════════════════════════════════════
+   LAYOUT & TYPOGRAPHY
+═══════════════════════════════════════ */
+main {
+  position: relative; z-index: 1;
+  max-width: 1320px; margin: 0 auto;
+  padding: 26px 20px;
+}
+.view { display: none; }
+.view.active { display: block; animation: fadeUp 0.35s var(--ease) both; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.t-hero { font-size: clamp(28px, 5vw, 52px); font-weight: 800; letter-spacing: -1.2px; line-height: 1.08; }
+.t-title { font-size: clamp(20px, 2.8vw, 28px); font-weight: 700; letter-spacing: -0.5px; }
+.t-section { font-size: 17px; font-weight: 600; letter-spacing: -0.2px; }
+.t-label { font-size: 11px; font-weight: 600; letter-spacing: 1.1px; text-transform: uppercase; color: var(--text3); }
+.t-body   { font-size: 14px; line-height: 1.65; color: var(--text2); }
+.t-green  { color: var(--green); }
+.t-red    { color: var(--red); }
+.t-gold   { color: var(--gold); }
+.t-muted  { color: var(--text2); }
+.t-dim    { color: var(--text3); }
+
+/* ═══════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════ */
+.card {
+  background: var(--bg1); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 22px; position: relative; overflow: hidden;
+  transition: border-color 0.22s var(--ease), transform 0.22s var(--ease), background 0.3s;
+}
+.card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.card-inner { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px 18px; transition: background 0.3s; }
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.g3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+.gauto { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 18px; }
+.mb12 { margin-bottom: 12px; }
+.mb18 { margin-bottom: 18px; }
+.mb24 { margin-bottom: 24px; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.flex-gap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.kpi-big { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -1px; line-height: 1; margin: 6px 0 4px; }
+.icon-cir { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+.icon-cir.red   { background: var(--red-dim);   color: var(--red); }
+.icon-cir.green { background: var(--green-dim);  color: var(--green); }
+.icon-cir.gold  { background: var(--gold-dim);   color: var(--gold); }
+.icon-cir.blue  { background: var(--blue-dim);   color: var(--blue); }
+
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 100px; font-size: 11.5px; font-weight: 600; }
+.badge-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(0,201,122,0.22); }
+.badge-red   { background: var(--red-dim);   color: var(--red);   border: 1px solid rgba(214,5,55,0.2); }
+.badge-gold  { background: var(--gold-dim);  color: var(--gold);  border: 1px solid rgba(240,180,41,0.22); }
+.badge-blue  { background: var(--blue-dim);  color: var(--blue);  border: 1px solid rgba(61,158,255,0.2); }
+
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 22px; border-radius: 100px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; border: none; transition: all 0.2s var(--ease); }
+.btn-red { background: linear-gradient(135deg, var(--red), var(--burgundy)); color: #fff; box-shadow: 0 3px 12px rgba(214,5,55,0.28); }
+.btn-red:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-ghost { background: var(--bg2); color: var(--text); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg3); border-color: var(--border2); }
+.btn-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(0,201,122,0.25); }
+.btn-green:hover { background: rgba(0,201,122,0.16); }
+
+.prog-track { height: 6px; background: var(--bg3); border-radius: 100px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--green)); border-radius: 100px; transition: width 1.2s var(--ease); }
+hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+.ledger { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 15px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r-sm); margin-bottom: 8px; transition: background 0.18s; }
+.ledger:hover { background: var(--bg3); }
+.ledger-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.ledger-sub { font-size: 12px; color: var(--text3); }
+.ledger-gp { font-size: 14px; font-weight: 700; color: var(--green); white-space: nowrap; }
+
+.mini-bars { display: flex; align-items: flex-end; gap: 5px; height: 44px; margin-top: 14px; }
+.mbar { flex: 1; border-radius: 3px 3px 0 0; background: var(--bg3); position: relative; overflow: hidden; }
+.mbar-fill { position: absolute; bottom: 0; left: 0; right: 0; border-radius: 3px 3px 0 0; background: linear-gradient(to top, var(--burgundy), var(--red)); transition: height 0.8s var(--ease); }
+.mbar.hi .mbar-fill { background: linear-gradient(to top, #007A50, var(--green)); }
+
+.tick { font-size: 12.5px; color: var(--text2); background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.tick strong { color: var(--green); font-weight: 600; }
+
+.bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 130px; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; }
+.bar-pillar { flex: 1; width: 100%; background: var(--bg3); border-radius: 4px 4px 0 0; position: relative; overflow: hidden; }
+.bar-fill { position: absolute; bottom: 0; left: 0; right: 0; border-radius: 4px 4px 0 0; background: linear-gradient(to top, var(--burgundy), var(--red)); transition: height 1s var(--ease); }
+.bar-col:hover .bar-fill { background: linear-gradient(to top, #006E46, var(--green)); }
+.bar-lbl { font-size: 11px; color: var(--text3); }
+
+.donut-wrap { position: relative; width: 155px; height: 155px; flex-shrink: 0; }
+.donut-svg { transform: rotate(-90deg); }
+.donut-bg { fill: none; stroke: var(--bg3); stroke-width: 4; }
+.donut-seg { fill: none; stroke-width: 4; stroke-dasharray: 100; stroke-linecap: round; }
+.donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.donut-center .dn { font-size: 28px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.donut-center .ds { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+.leg { display: flex; align-items: center; gap: 9px; font-size: 13.5px; color: var(--text2); margin-bottom: 9px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+.journey { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; position: relative; margin-top: 30px; }
+.journey::before { content: ''; position: absolute; top: 27px; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--border2), var(--border2), transparent); }
+.j-step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; position: relative; z-index: 1; padding: 0 6px; }
+.j-circ { width: 54px; height: 54px; border-radius: 50%; background: var(--bg2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 19px; color: var(--text3); transition: all 0.22s var(--ease); }
+.j-step:hover .j-circ { border-color: var(--green); color: var(--green); background: var(--green-dim); box-shadow: 0 0 0 7px var(--green-dim); }
+.j-title { font-size: 12.5px; font-weight: 600; }
+.j-desc  { font-size: 11.5px; color: var(--text3); line-height: 1.4; }
+
+.tier-card { background: var(--bg1); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; position: relative; overflow: hidden; transition: background 0.3s, border-color 0.22s; }
+.tier-stripe { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.tier-card.active-tier { border-color: var(--red); background: rgba(214,5,55,0.03); }
+.tier-card ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.tier-card li { font-size: 13.5px; color: var(--text2); display: flex; gap: 8px; align-items: flex-start; }
+.tier-card li i { margin-top: 2px; font-size: 12px; flex-shrink: 0; }
+
+.bvault { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; }
+.bcard { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 18px 14px; text-align: center; transition: border-color 0.2s, background 0.3s; }
+.bcard.earned { border-color: rgba(240,180,41,0.28); }
+.bcard i { font-size: 26px; margin-bottom: 9px; display: block; color: var(--text3); }
+.bcard.earned i { color: var(--gold); }
+.bcard h5 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.bcard p  { font-size: 11.5px; color: var(--text3); line-height: 1.4; }
+
+.mkt-card { background: var(--bg1); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.22s, transform 0.22s; }
+.mkt-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.mkt-img { height: 148px; background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 44px; color: var(--bg3); position: relative; }
+.mkt-body { padding: 18px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.mkt-price { font-size: 21px; font-weight: 800; letter-spacing: -0.5px; color: var(--green); margin-bottom: 5px; }
+.mkt-name  { font-size: 15px; font-weight: 600; margin-bottom: 7px; }
+.mkt-desc  { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 16px; }
+
+.avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--red), var(--burgundy)); display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; color: #fff; border: 2px solid var(--border2); box-shadow: 0 0 0 5px var(--red-dim); flex-shrink: 0; }
+
+.comm-hero { background: var(--bg1); border: 1px solid var(--border); border-radius: var(--r); padding: 36px 32px; margin-bottom: 20px; position: relative; overflow: hidden; transition: background 0.3s; }
+.comm-hero::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 85% 40%, rgba(0,201,122,0.06) 0%, transparent 55%); pointer-events: none; }
+.comm-stats { display: grid; grid-template-columns: repeat(3,1fr); margin-top: 28px; border: 1px solid var(--border); border-radius: var(--r-sm); overflow: hidden; }
+.cs { padding: 24px 20px; border-right: 1px solid var(--border); }
+.cs:last-child { border-right: none; }
+.cs-num { font-size: clamp(26px,4vw,40px); font-weight: 800; letter-spacing: -1px; line-height: 1; margin: 6px 0 5px; }
+.cs-lbl { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); }
+.cs-sub { font-size: 13px; color: var(--text2); margin-top: 3px; }
+
+.lb-row { display: grid; grid-template-columns: 46px 1fr auto; gap: 14px; align-items: center; padding: 13px 16px; border-radius: var(--r-sm); transition: background 0.18s; }
+.lb-row:hover { background: var(--bg2); }
+.lb-row.me { background: rgba(214,5,55,0.04); outline: 1px solid rgba(214,5,55,0.14); border-radius: var(--r-sm); }
+.lb-rank { font-size: 18px; font-weight: 800; text-align: center; color: var(--text3); }
+.lb-rank.g1 { color: var(--gold); }
+.lb-rank.g2 { color: var(--text2); }
+.lb-rank.g3 { color: #C0794A; }
+.lb-name { font-size: 14px; font-weight: 500; }
+.lb-sub  { font-size: 12px; color: var(--text3); }
+.lb-co2  { font-size: 13.5px; font-weight: 700; color: var(--green); }
+
+.gp-pill { background: var(--bg1); border: 1px solid var(--border); border-radius: var(--r); padding: 15px 24px; text-align: right; white-space: nowrap; transition: background 0.3s; }
+.gp-val { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1; color: var(--green); }
+.gp-lbl { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-top: 3px; }
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+.modal-back { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(14px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.28s var(--ease); padding: 20px; }
+.modal-back.open { opacity: 1; pointer-events: auto; }
+.modal { background: var(--bg1); border: 1px solid var(--border2); border-radius: var(--r); padding: 32px; width: 100%; max-width: 500px; transform: scale(0.93) translateY(14px); transition: transform 0.28s var(--ease); position: relative; max-height: 90vh; overflow-y: auto; }
+.modal-back.open .modal { transform: scale(1) translateY(0); }
+.modal-close { position: absolute; top: 18px; right: 18px; width: 30px; height: 30px; border-radius: 50%; background: var(--bg3); border: none; color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: background 0.18s; }
+.modal-close:hover { background: var(--bg2); color: var(--text); }
+
+.tier-modal-back { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(16px); z-index: 2100; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.28s var(--ease); padding: 20px; }
+.tier-modal-back.open { opacity: 1; pointer-events: auto; }
+.tier-modal { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 36px; width: 100%; max-width: 860px; max-height: 90vh; overflow-y: auto; transform: scale(0.93) translateY(14px); transition: transform 0.28s var(--ease); position: relative; }
+.tier-modal-back.open .tier-modal { transform: scale(1) translateY(0); }
+
+.login-form .form-field { margin-bottom: 14px; }
+.login-form label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text3); margin-bottom: 7px; }
+.login-form input { width: 100%; background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 15px; color: var(--text); font-family: inherit; font-size: 14.5px; transition: border-color 0.18s, background 0.18s; }
+.login-form input:focus { outline: none; border-color: var(--red); background: var(--bg2); }
+.login-form input::placeholder { color: var(--text3); }
+
+.success-icon { width: 68px; height: 68px; border-radius: 50%; background: var(--green-dim); color: var(--green); display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 18px; animation: pop 0.35s var(--ease); }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 1050px) {
+  .g3 { grid-template-columns: 1fr 1fr; }
+  .g4 { grid-template-columns: 1fr 1fr; }
+  .bvault { grid-template-columns: 1fr 1fr; }
+  .journey { grid-template-columns: repeat(3,1fr); }
+  .journey::before { display: none; }
+  .comm-stats { grid-template-columns: 1fr; }
+  .cs { border-right: none; border-bottom: 1px solid var(--border); }
+  .cs:last-child { border-bottom: none; }
+}
+@media (max-width: 768px) {
+  .top-nav .nav-pills { display: none; }
+  .bottom-nav { display: flex; }
+  .g2, .g3 { grid-template-columns: 1fr; }
+  .g4 { grid-template-columns: 1fr 1fr; }
+  .journey { grid-template-columns: repeat(2,1fr); }
+  .live-dot { display: none; }
+}
+@media (max-width: 480px) {
+  .g4 { grid-template-columns: 1fr; }
+  .bvault { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<!-- ═══ TOP NAV ═══ -->
+<nav class="top-nav">
+  <div class="logo" onclick="go('home')">
+    <div class="logo-mark">H</div>
+    <div class="logo-name">Häfele <em>GreenTrace</em></div>
+  </div>
+  <div class="nav-pills">
+    <div class="np active" data-v="home" onclick="go('home')">Home</div>
+    <div class="np" data-v="carbon" onclick="go('carbon')">Carbon Impact</div>
+    <div class="np" data-v="rewards" onclick="go('rewards')">Rewards</div>
+    <div class="np" data-v="profile" onclick="go('profile')">Profile</div>
+    <div class="np" data-v="community" onclick="go('community')">Community</div>
+    <div class="np" data-v="takeback" onclick="go('takeback')">Give-Back</div>
+  </div>
+  <div class="nav-right">
+    <button class="theme-btn" id="theme-toggle" title="เปลี่ยนโหมดสว่าง/มืด" onclick="toggleTheme()">
+      <i class="fa-solid fa-sun" id="theme-icon"></i>
+    </button>
+    <button class="login-btn" onclick="openLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบ
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ MOBILE BOTTOM NAV ═══ -->
+<div class="bottom-nav">
+  <div class="bnav active" data-v="home" onclick="go('home')">      <i class="fa-solid fa-chart-pie"></i><span>Home</span></div>
+  <div class="bnav" data-v="carbon" onclick="go('carbon')">    <i class="fa-solid fa-seedling"></i><span>Carbon</span></div>
+  <div class="bnav" data-v="rewards" onclick="go('rewards')">   <i class="fa-solid fa-gift"></i><span>Rewards</span></div>
+  <div class="bnav" data-v="profile" onclick="go('profile')">   <i class="fa-solid fa-user"></i><span>Profile</span></div>
+  <div class="bnav" data-v="community" onclick="go('community')"> <i class="fa-solid fa-users"></i><span>Community</span></div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════════
+     ① HOME
+═══════════════════════════════════════ -->
+<section id="view-home" class="view active">
+
+  <!-- ── Campaign Banner ── -->
+  <div class="card mb24" style="padding: 0; overflow: hidden; border-color: rgba(0,201,122,0.3);">
+    <div style="display: flex; flex-wrap: wrap;">
+      <!-- Image Section -->
+      <div style="flex: 1 1 300px; min-height: 220px; display: flex;">
+        <img src="https://placehold.co/600x400/00C97A/FFFFFF?text=Campaign+Image" 
+             alt="Promo Image" 
+             style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
+      
+      <!-- Content Section -->
+      <div style="flex: 2 1 400px; padding: 28px; background: linear-gradient(135deg, var(--green-dim), transparent); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div class="icon-cir" style="background: var(--green); color: #fff; box-shadow: 0 4px 12px rgba(0,201,122,0.3); width: 36px; height: 36px; font-size: 16px;">
+            <i class="fa-solid fa-bullhorn"></i>
+          </div>
+          <div class="t-label" style="color: var(--green); font-size: 12px;">Special Campaign</div>
+        </div>
+        <div>
+          <div class="t-section" style="margin-bottom: 6px; font-size: 20px;">Green Month: คืนสินค้าวันนี้ รับ GP x2!</div>
+          <div class="t-body">ร่วมรักษ์โลกกับแคมเปญพิเศษตลอดเดือนนี้ เพียงนำสินค้าเก่ามา Give-Back รับพอยต์ 2 เท่าทันที พร้อมลุ้นรับของรางวัลพิเศษอื่นๆ อีกมากมาย</div>
+        </div>
+        <button class="btn btn-green" style="background: var(--green); color: #fff; border: none; box-shadow: 0 4px 12px rgba(0,201,122,0.2); margin-top: 4px;" onclick="go('takeback')">
+          ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero row -->
+  <div style="display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;margin-bottom:24px;" class="hero-row">
+    <div>
+      <div class="t-label mb12">Häfele GreenTrace · Dashboard</div>
+      <div class="t-hero">สวัสดี, <span class="t-red">UOB</span></div>
+      <div class="t-body" style="margin-top:7px;">Silver Partner · Tier 2 &nbsp;·&nbsp; </div>
+      <div class="flex-gap" style="margin-top:12px;">
+        <div class="tick"><strong>−128 kg</strong> CO₂ ประหยัดได้ทั้งหมด</div>
+        <div class="tick"><strong>6 ต้น</strong> เทียบเท่าต้นไม้</div>
+        <div class="tick"><strong>Top 18%</strong> อันดับโลก</div>
+      </div>
+    </div>
+    <div class="gp-pill">
+      <div class="gp-val">3,250</div>
+      <div class="gp-lbl">Green Points</div>
+    </div>
+  </div>
+
+  <!-- KPI row -->
+  <div class="g3 mb24">
+    <div class="card" style="display:flex;align-items:center;gap:15px;cursor:pointer;" onclick="go('carbon')">
+      <div class="icon-cir red"><i class="fa-solid fa-cloud-arrow-down"></i></div>
+      <div>
+        <div class="t-label mb12">Carbon Saved</div>
+        <div class="kpi-big t-red">128 <span style="font-size:15px;color:var(--text3);font-weight:400;">kgCO₂e</span></div>
+      </div>
+    </div>
+    <div class="card" style="display:flex;align-items:center;gap:15px;cursor:pointer;" onclick="go('profile')">
+      <div class="icon-cir gold"><i class="fa-solid fa-medal"></i></div>
+      <div>
+        <div class="t-label mb12">Tier Status</div>
+        <div class="kpi-big t-gold">T2 <span style="font-size:15px;color:var(--text3);font-weight:400;">Impact Partner</span></div>
+      </div>
+    </div>
+    <div class="card" style="display:flex;align-items:center;gap:15px;cursor:pointer;" onclick="go('takeback')">
+      <div class="icon-cir green"><i class="fa-solid fa-recycle"></i></div>
+      <div>
+        <div class="t-label mb12">Environmental Impact</div>
+        <div class="kpi-big t-green">6 <span style="font-size:15px;color:var(--text3);font-weight:400;">ต้น</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2 mb24">
+    <!-- Tier progress -->
+    <div class="card">
+      <div class="t-label mb12">Tier Milestone Progress</div>
+      <div class="t-section" style="margin-bottom:4px;">3,250 <span style="font-size:14px;color:var(--text3);font-weight:400;">/ 20,000 GP</span></div>
+      <div class="prog-track" style="margin:14px 0 8px;">
+        <div class="prog-fill" style="width:16.25%"></div>
+      </div>
+      <div class="t-body" style="margin-bottom:18px;font-size:13px;">เหลืออีก 16,750 GP เพื่อปลดล็อก Tier 3</div>
+      <div class="card-inner">
+        <div class="t-label mb12" style="color:var(--red)">สิทธิประโยชน์ Tier 3</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;">
+          <div style="display:flex;gap:8px;color:var(--text2);"><i class="fa-solid fa-check" style="color:var(--green);margin-top:2px;width:14px"></i>GP Multiplier ×1.5</div>
+          <div style="display:flex;gap:8px;color:var(--text2);"><i class="fa-solid fa-check" style="color:var(--green);margin-top:2px;width:14px"></i>Expert Sustainability Consultation</div>
+          <div style="display:flex;gap:8px;color:var(--text2);"><i class="fa-solid fa-check" style="color:var(--green);margin-top:2px;width:14px"></i>ส่วนลด Green Products 10%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly summary -->
+    <div class="card">
+      <div class="flex-between mb18">
+        <div class="t-section">กิจกรรมเดือนนี้</div>
+        <div class="badge badge-green">+15 kgCO₂e</div>
+      </div>
+      <div class="card-inner mb12" style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="t-body"><i class="fa-solid fa-basket-shopping" style="color:var(--red);margin-right:7px;"></i>การสั่งซื้อสินค้า</span>
+        <span style="font-weight:700;">4 คำสั่ง</span>
+      </div>
+      <div class="card-inner" style="display:flex;justify-content:space-between;align-items:center;">
+        <span class="t-body"><i class="fa-solid fa-truck-ramp-box" style="color:var(--green);margin-right:7px;"></i>Give-Back คืนของ</span>
+        <span style="font-weight:700;">2 ชุด</span>
+      </div>
+      <div class="mini-bars">
+        <div class="mbar" style="height:100%"><div class="mbar-fill" style="height:30%"></div></div>
+        <div class="mbar" style="height:100%"><div class="mbar-fill" style="height:48%"></div></div>
+        <div class="mbar" style="height:100%"><div class="mbar-fill" style="height:40%"></div></div>
+        <div class="mbar" style="height:100%"><div class="mbar-fill" style="height:72%"></div></div>
+        <div class="mbar hi" style="height:100%"><div class="mbar-fill" style="height:100%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent ledger -->
+  <div class="card">
+    <div class="flex-between mb18">
+      <div class="t-section">รายการ GP ล่าสุด</div>
+      <button class="btn btn-ghost" style="padding:8px 16px;font-size:13px;" onclick="go('rewards')">ดูทั้งหมด</button>
+    </div>
+    
+    <!-- New Top up donation entry -->
+    <div class="ledger">
+      <div><div class="ledger-title">Top up donation (Campaign)</div><div class="ledger-sub">สมทบทุนบริจาคโครงการปลูกป่า</div></div>
+      <div class="ledger-gp">+150 GP</div>
+    </div>
+
+    <div class="ledger">
+      <div><div class="ledger-title">Give-back Campaign</div><div class="ledger-sub">Invoice #HF-99421</div></div>
+      <div class="ledger-gp">+350 GP</div>
+    </div>
+    <div class="ledger">
+      <div><div class="ledger-title">Purchase Products / Impact Products</div><div class="ledger-sub">Consignment #TB-0412</div></div>
+      <div class="ledger-gp">+250 GP</div>
+    </div>
+    <div class="ledger">
+      <div><div class="ledger-title">Green Miles Rewards Campaign Bonus</div><div class="ledger-sub">Seasonal bonus</div></div>
+      <div class="ledger-gp">+500 GP</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ② CARBON IMPACT + PURCHASE
+═══════════════════════════════════════ -->
+<section id="view-carbon" class="view">
+  <div class="t-title mb24">Carbon &amp; Procurement Impact</div>
+
+  <div class="g3 mb24">
+    <div class="card">
+      <i class="fa-solid fa-cloud-arrow-down" style="color:var(--red);font-size:22px;margin-bottom:8px;"></i>
+      <div class="t-label mb12">CO₂ ประหยัดทั้งหมด</div>
+      <div class="kpi-big t-red">128 <span style="font-size:14px;font-weight:400;color:var(--text3);">kgCO₂e</span></div>
+    </div>
+    <div class="card">
+      <i class="fa-solid fa-bolt" style="color:var(--gold);font-size:22px;margin-bottom:8px;"></i>
+      <div class="t-label mb12">Energy Offset</div>
+      <div class="kpi-big t-gold">542 <span style="font-size:14px;font-weight:400;color:var(--text3);">kWh</span></div>
+    </div>
+    <div class="card">
+      <i class="fa-solid fa-car-side" style="color:var(--green);font-size:22px;margin-bottom:8px;"></i>
+      <div class="t-label mb12">ระยะทางที่ลดได้</div>
+      <div class="kpi-big t-green">840 <span style="font-size:14px;font-weight:400;color:var(--text3);">km</span></div>
+    </div>
+  </div>
+
+  <div class="g2 mb24">
+    <!-- Donut -->
+    <div class="card" style="display:flex;gap:28px;align-items:center;flex-wrap:wrap;">
+      <div class="donut-wrap">
+        <svg class="donut-svg" width="155" height="155" viewBox="0 0 42 42">
+          <circle class="donut-bg" cx="21" cy="21" r="15.915"></circle>
+          <!-- 65% Purchases -->
+          <circle class="donut-seg" cx="21" cy="21" r="15.915" stroke="var(--green)" stroke-dasharray="65 35" stroke-dashoffset="0"></circle>
+          <!-- 15% Give-Back -->
+          <circle class="donut-seg" cx="21" cy="21" r="15.915" stroke="var(--red)" stroke-dasharray="15 85" stroke-dashoffset="-65"></circle>
+          <!-- 12% Top up donation -->
+          <circle class="donut-seg" cx="21" cy="21" r="15.915" stroke="var(--blue)" stroke-dasharray="12 88" stroke-dashoffset="-80"></circle>
+          <!-- 8% Campaign -->
+          <circle class="donut-seg" cx="21" cy="21" r="15.915" stroke="var(--gold)" stroke-dasharray="8 92" stroke-dashoffset="-92"></circle>
+        </svg>
+        <div class="donut-center">
+          <div class="dn">65%</div>
+          <div class="ds">Purchases</div>
+        </div>
+      </div>
+      <div>
+        <div class="t-label mb12">แหล่งที่มาของผลกระทบ</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Sustainable Procurement (65%)</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Give-Back Operations (15%)</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Top up donation (12%)</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>Campaign Actions (8%)</div>
+      </div>
+    </div>
+
+    <!-- Bar chart -->
+    <div class="card">
+      <div class="flex-between mb18">
+        <div class="t-section">Carbon Savings ปี 2026</div>
+        <div class="t-dim" style="font-size:12px;">kgCO₂e</div>
+      </div>
+      <div class="bar-chart">
+        <div class="bar-col"><div class="bar-pillar"><div class="bar-fill" style="height:25%"></div></div><div class="bar-lbl">ม.ค.</div></div>
+        <div class="bar-col"><div class="bar-pillar"><div class="bar-fill" style="height:40%"></div></div><div class="bar-lbl">ก.พ.</div></div>
+        <div class="bar-col"><div class="bar-pillar"><div class="bar-fill" style="height:55%"></div></div><div class="bar-lbl">มี.ค.</div></div>
+        <div class="bar-col"><div class="bar-pillar"><div class="bar-fill" style="height:70%"></div></div><div class="bar-lbl">เม.ย.</div></div>
+        <div class="bar-col"><div class="bar-pillar"><div class="bar-fill" style="height:85%"></div></div><div class="bar-lbl">พ.ค.</div></div>
+        <div class="bar-col"><div class="bar-pillar"><div class="bar-fill" style="height:100%"></div></div><div class="bar-lbl">มิ.ย.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Purchase segment -->
+  <hr>
+  <div class="flex-between mb18" style="padding-top:8px;">
+    <div class="t-section">Procurement Environmental Impact</div>
+    <div class="badge badge-green"><i class="fa-solid fa-cart-shopping"></i> ประหยัด 92 kgCO₂e จากการจัดซื้อ</div>
+  </div>
+  <div class="g4">
+    <div class="card">
+      <div class="icon-cir red" style="margin-bottom:12px;"><i class="fa-solid fa-box"></i></div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px;">บรรจุภัณฑ์ Low Carbon</div>
+      <div class="t-body">วัสดุเซลลูโลสย่อยสลายได้แทนพลาสติกแบบใช้ครั้งเดียว</div>
+    </div>
+    <div class="card">
+      <div class="icon-cir green" style="margin-bottom:12px;"><i class="fa-solid fa-arrows-spin"></i></div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px;">Circular Design</div>
+      <div class="t-body">ออกแบบสำหรับการรื้อถอนและการนำชิ้นส่วนกลับมาใช้ใหม่</div>
+    </div>
+    <div class="card">
+      <div class="icon-cir blue" style="margin-bottom:12px;"><i class="fa-solid fa-faucet-drip"></i></div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px;">ลดการใช้น้ำ</div>
+      <div class="t-body">Micro-valve ลดการใช้น้ำได้สูงสุด 35%</div>
+    </div>
+    <div class="card">
+      <div class="icon-cir gold" style="margin-bottom:12px;"><i class="fa-solid fa-charging-station"></i></div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:6px;">Hardware ประหยัดพลังงาน</div>
+      <div class="t-body">LED drivers กินไฟสแตนด์บายต่ำมาก</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ③ REWARDS
+═══════════════════════════════════════ -->
+<section id="view-rewards" class="view">
+  <div class="flex-between mb24">
+    <div>
+      <div class="t-label mb12">Green Points Marketplace</div>
+      <div class="t-title">Rewards</div>
+      <div class="t-body" style="margin-top:5px;">แลก Green Points เพื่อรับรางวัลพิเศษสำหรับคุณ</div>
+    </div>
+    <div class="gp-pill">
+      <div class="gp-val">3,250</div>
+      <div class="gp-lbl">Green Points</div>
+    </div>
+  </div>
+
+  <!-- Ledger -->
+  <div class="card mb24">
+    <div class="t-label mb18"><i class="fa-solid fa-clock-rotate-left" style="color:var(--red);margin-right:7px;"></i>รายการ GP ล่าสุด</div>
+    
+    <!-- New Top up donation entry -->
+    <div class="ledger">
+      <div><div class="ledger-title">Top up donation (Campaign)</div><div class="ledger-sub">สมทบทุนบริจาคโครงการปลูกป่า</div></div>
+      <div class="ledger-gp">+150 GP</div>
+    </div>
+
+    <div class="ledger">
+      <div><div class="ledger-title">Give-back Campaign</div><div class="ledger-sub">Invoice #HF-99421</div></div>
+      <div class="ledger-gp">+350 GP</div>
+    </div>
+    <div class="ledger">
+      <div><div class="ledger-title">Purchase Products / Impact Products</div><div class="ledger-sub">Consignment #TB-0412</div></div>
+      <div class="ledger-gp">+250 GP</div>
+    </div>
+    <div class="ledger">
+      <div><div class="ledger-title">Green Miles Rewards Campaign Bonus</div><div class="ledger-sub">Seasonal bonus</div></div>
+      <div class="ledger-gp">+500 GP</div>
+    </div>
+  </div>
+
+  <div class="gauto">
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-tags"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-gold">Corporate Value</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">500 GP</div>
+          <div class="mkt-name">ส่วนลดสด THB 100</div>
+          <div class="mkt-desc">ใช้ได้กับคำสั่งซื้อสินค้าสถาปัตยกรรมและอุปกรณ์ฟังก์ชันทุกประเภท</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('ส่วนลดสด THB 100',500)">แลกรางวัล</button>
+      </div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-tags"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-gold">Corporate Value</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">2,000 GP</div>
+          <div class="mkt-name">ส่วนลดสด THB 500</div>
+          <div class="mkt-desc">ใช้ได้กับคำสั่งซื้อสินค้าสถาปัตยกรรมและอุปกรณ์ฟังก์ชันทุกประเภท</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('ส่วนลดสด THB 500',2000)">แลกรางวัล</button>
+      </div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-tags"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-gold">Corporate Value</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">5,000 GP</div>
+          <div class="mkt-name">ส่วนลดสด THB 2000</div>
+          <div class="mkt-desc">ใช้ได้กับคำสั่งซื้อสินค้าสถาปัตยกรรมและอุปกรณ์ฟังก์ชันทุกประเภท</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('ส่วนลดสด THB 2000',5000)">แลกรางวัล</button>
+      </div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-tags"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-gold">Corporate Value</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">2,000 GP</div>
+          <div class="mkt-name">ส่วนลดสด 10 %</div>
+          <div class="mkt-desc">ใช้ได้กับคำสั่งซื้อสินค้าสถาปัตยกรรมและอุปกรณ์ฟังก์ชันที่เข้าร่วมรายการ "เท่านั้น"</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('ส่วนลดสด 10 %',2000)">แลกรางวัล</button>
+      </div>
+    </div>
+    
+    <!-- New Item: ถุงผ้า -->
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-bag-shopping"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-green">Eco Materials</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">300 GP</div>
+          <div class="mkt-name">ถุงผ้า Häfele Eco-Bag</div>
+          <div class="mkt-desc">ถุงผ้ารักษ์โลกใบใหญ่ แข็งแรงทนทาน ผลิตจากเส้นใยพลาสติก PET รีไซเคิล 100%</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('ถุงผ้า Häfele Eco-Bag', 300)">แลกรางวัล</button>
+      </div>
+    </div>
+
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-glass-water-droplet"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-green">Eco Materials</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">1,500 GP</div>
+          <div class="mkt-name">Häfele Insulated Eco-Tumbler</div>
+          <div class="mkt-desc">แก้วสแตนเลสเก็บอุณหภูมิ 2 ชั้น ผลิตจากโลหะรีไซเคิล 100%</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('Häfele Insulated Eco-Tumbler',1500)">แลกรางวัล</button>
+      </div>
+    </div>
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-network-wired"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-blue">Smart Tech</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">3,000 GP</div>
+          <div class="mkt-name">Häfele Smart Eco Power Plug</div>
+          <div class="mkt-desc">ปลั๊ก IoT ตรวจวัดการใช้ไฟฟ้าแบบเรียลไทม์และตัดสแตนด์บายอัตโนมัติ</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('Häfele Smart Eco Power Plug',3000)">แลกรางวัล</button>
+      </div>
+    </div>
+
+    <!-- New Item: Solar cell -->
+    <div class="mkt-card">
+      <div class="mkt-img"><i class="fa-solid fa-solar-panel"></i><div style="position:absolute;top:12px;right:12px;"><span class="badge badge-blue">Smart Tech</span></div></div>
+      <div class="mkt-body">
+        <div>
+          <div class="mkt-price">15,000 GP</div>
+          <div class="mkt-name">Häfele Solar Cell Set</div>
+          <div class="mkt-desc">ชุดแผงโซลาร์เซลล์พร้อมบริการติดตั้งฟรี ช่วยองค์กรประหยัดพลังงานอย่างยั่งยืน</div>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;" onclick="openRedeem('Häfele Solar Cell Set', 15000)">แลกรางวัล</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ④ PROFILE
+═══════════════════════════════════════ -->
+<section id="view-profile" class="view">
+
+  <div style="display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;margin-bottom:26px;flex-wrap:wrap;" class="profile-hdr">
+    <div class="avatar">U</div>
+    <div>
+      <div class="t-label mb12">Your Profile</div>
+      <div class="t-title">United Overseas Bank (UOB)</div>
+      <div class="t-body" style="margin-top:4px;">UOB Thailand</div>
+      <div class="flex-gap" style="margin-top:9px;">
+        <span class="badge badge-red"><i class="fa-solid fa-shield-halved"></i> Tier 2 · Silver Partner</span>
+        <span class="badge badge-gold"><i class="fa-solid fa-arrow-trend-up"></i> Top 18% Global</span>
+      </div>
+    </div>
+    <button class="btn btn-ghost" onclick="openTierModal()"><i class="fa-solid fa-list"></i> ดูสิทธิประโยชน์ทุก Tier</button>
+  </div>
+
+  <div class="g2 mb24">
+    <div class="card">
+      <div class="t-label mb12">Tier Milestone Progress</div>
+      <div class="t-section" style="margin-bottom:4px;">3,250 <span style="font-size:13px;font-weight:400;color:var(--text3);">/ 20,000 GP</span></div>
+      <div class="prog-track" style="margin:14px 0 9px;"><div class="prog-fill" style="width:16.25%"></div></div>
+      <div class="t-body" style="font-size:13px;margin-bottom:18px;">เหลืออีก 16,750 GP ถึง Tier 3</div>
+      <hr>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;">
+        <div style="display:flex;justify-content:space-between;"><span class="t-muted">GP Multiplier ปัจจุบัน</span><span style="font-weight:700;">×1.25</span></div>
+        <div style="display:flex;justify-content:space-between;"><span class="t-muted">ส่วนลด </span><span style="font-weight:700;color:var(--green)">5%</span></div>
+        <div style="display:flex;justify-content:space-between;"><span class="t-muted">GP รวมตลอดชีพ</span><span style="font-weight:700;">3,250 GP</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="t-label mb12">Impact Summary</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="card-inner"><div class="t-label mb12">CO₂ ที่ประหยัดได้</div><div class="kpi-big t-green" style="font-size:28px;">128 <span style="font-size:12px;color:var(--text3);font-weight:400"> kg</span></div></div>
+        <div class="card-inner"><div class="t-label mb12">เทียบเท่าต้นไม้</div><div class="kpi-big t-green" style="font-size:28px;">6 <span style="font-size:12px;color:var(--text3);font-weight:400"> ต้น</span></div></div>
+        <div class="card-inner"><div class="t-label mb12">สินค้าที่คืน</div><div class="kpi-big" style="font-size:28px;">14 <span style="font-size:12px;color:var(--text3);font-weight:400"> ชิ้น</span></div></div>
+        <div class="card-inner"><div class="t-label mb12">Top community</div><div class="kpi-big t-gold" style="font-size:28px;">18%<span style="font-size:12px;color:var(--text3);font-weight:400"></span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievements -->
+  <div class="card">
+    <div class="t-label mb18">Achievements</div>
+    <div class="bvault">
+      <div class="bcard earned"><i class="fa-solid fa-seedling"></i><h5>First Green Purchase</h5><p>ซื้อสินค้า low-carbon ครั้งแรก</p></div>
+      <div class="bcard earned"><i class="fa-solid fa-weight-hanging"></i><h5>100 kg CO₂ Saved</h5><p>ลดการปล่อย CO₂ ได้เกิน 100 kg</p></div>
+      <div class="bcard earned"><i class="fa-solid fa-arrow-trend-up"></i><h5>Top 20% Contributor</h5><p>อยู่ใน Top 20% ระดับโลก</p></div>
+      <div class="bcard"><i class="fa-solid fa-crown"></i><h5 style="color:var(--text3)">Carbon Overlord</h5><p style="color:var(--text3)">ต้องถึง Tier 4 ก่อน</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ⑤ COMMUNITY
+═══════════════════════════════════════ -->
+<section id="view-community" class="view">
+
+  <div class="comm-hero">
+    <div class="t-label mb12" style="color:var(--green)">Häfele Community Impact</div>
+    <div class="t-hero">เราช่วยโลก<br><span class="t-green">ด้วยกัน</span></div>
+    <div class="t-body" style="max-width:500px;margin-top:10px;">
+      ทุกการตัดสินใจซื้อ ทุกการคืนสินค้า และทุกการเข้าร่วมแคมเปญ สร้างผลกระทบที่ยิ่งใหญ่กว่าองค์กรเดียว
+    </div>
+    <div class="comm-stats">
+      <div class="cs">
+        <div class="cs-lbl">สมาชิก</div>
+        <div class="cs-num" style="color:var(--blue)">24,500</div>
+        <div class="cs-sub">คนไทยและองค์กรที่เข้าร่วมทั่วโลก</div>
+      </div>
+      <div class="cs">
+        <div class="cs-lbl">ช่วยลด Carbon แล้ว</div>
+        <div class="cs-num" style="color:var(--green)">75 ตัน</div>
+        <div class="cs-sub">CO₂ equivalent รวมทั้งหมด</div>
+      </div>
+      <div class="cs">
+        <div class="cs-lbl">เทียบเท่าปลูกต้นไม้</div>
+        <div class="cs-num" style="color:var(--gold)">3,800 ต้น</div>
+        <div class="cs-sub">พลังงานคาร์บอนที่ดูดซับได้</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Your position -->
+  <div class="card mb20" style="background:linear-gradient(135deg,rgba(214,5,55,0.05),transparent)">
+    <div class="flex-between">
+      <div>
+        <div class="t-label mb12">ตำแหน่งของคุณในเครือข่าย</div>
+        <div class="t-section">อันดับ <span class="t-red">Top 18% </span>Community</div>
+        <div class="t-body" style="font-size:13px;margin-top:4px;">UOB Thailand · 128 kgCO₂e</div>
+      </div>
+      <button class="btn btn-ghost">เชิญพาร์ทเนอร์ →</button>
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="card">
+    <div class="flex-between mb18">
+      <div class="t-section">อันดับองค์กรในเครือข่าย</div>
+      <span class="badge badge-red">อันดับของคุณ: #14</span>
+    </div>
+    <hr style="margin-bottom:10px;">
+    <div class="lb-row">
+      <div class="lb-rank g1"><i class="fa-solid fa-crown" style="font-size:16px;"></i></div>
+      <div><div class="lb-name">BLANCO</div><div class="lb-sub">Partner</div></div>
+      <div class="lb-co2">4,850 kgCO₂e</div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-rank g2">2</div>
+      <div><div class="lb-name">BERTAZZONI</div><div class="lb-sub">Partner</div></div>
+      <div class="lb-co2">3,920 kgCO₂e</div>
+    </div>
+    <div class="lb-row">
+      <div class="lb-rank g3">3</div>
+      <div><div class="lb-name">AXOR &amp; HANSGROHE</div><div class="lb-sub">Partner</div></div>
+      <div class="lb-co2">3,110 kgCO₂e</div>
+    </div>
+    <div style="text-align:center;padding:10px;font-size:12px;color:var(--text3)">· · ·</div>
+    <div class="lb-row me">
+      <div class="lb-rank" style="color:var(--red);font-size:15px;font-weight:700;">#14</div>
+      <div><div class="lb-name">United Overseas Bank (UOB Thailand)</div><div class="lb-sub">Bangkok Branch Network</div></div>
+      <div class="lb-co2">128 kgCO₂e</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ⑥ TAKE-BACK
+═══════════════════════════════════════ -->
+<section id="view-takeback" class="view">
+  <div class="t-title mb24">Closed-Loop Give-Back Campaign</div>
+
+  <div class="g3 mb24">
+    <div class="card" style="text-align:center;">
+      <div class="t-label mb12">สินค้าที่คืนแล้ว</div>
+      <div class="kpi-big t-green">14 <span style="font-size:14px;font-weight:400;color:var(--text3)">ชิ้น</span></div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="t-label mb12">Carbon Saved</div>
+      <div class="kpi-big t-green">36 <span style="font-size:14px;font-weight:400;color:var(--text3)">kgCO₂e</span></div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="t-label mb12">ประสิทธิภาพรีไซเคิล</div>
+      <div class="kpi-big t-green">94.2<span style="font-size:18px;font-weight:400;color:var(--text3)">%</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="t-section" style="text-align:center;margin-bottom:6px;">Häfele Circular Economy Journey</div>
+    <div class="t-body" style="text-align:center;font-size:13px;">จากการใช้งานสู่ Zero Waste</div>
+    <div class="journey">
+      <div class="j-step">
+        <div class="j-circ"><i class="fa-solid fa-building-user"></i></div>
+        <div class="j-title">1. ใช้งาน</div>
+        <div class="j-desc">สินค้าทำหน้าที่ตามวงจรชีวิตพาณิชย์</div>
+      </div>
+      <div class="j-step">
+        <div class="j-circ"><i class="fa-solid fa-truck-ramp-box"></i></div>
+        <div class="j-title">2. Give-Back</div>
+        <div class="j-desc">คืนผ่านจุดรับทั่วประเทศ</div>
+      </div>
+      <div class="j-step">
+        <div class="j-circ"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <div class="j-title">3. ตรวจสอบ</div>
+        <div class="j-desc">คัดแยกและประเมินชิ้นส่วน</div>
+      </div>
+      <div class="j-step">
+        <div class="j-circ"><i class="fa-solid fa-circle-nodes"></i></div>
+        <div class="j-title">4. นำกลับใช้</div>
+        <div class="j-desc">ชิ้นส่วนกลับเข้าสู่กระบวนการผลิต</div>
+      </div>
+      <div class="j-step">
+        <div class="j-circ"><i class="fa-solid fa-leaf"></i></div>
+        <div class="j-title">5. Zero Waste</div>
+        <div class="j-desc">ไม่มีของเสียถูกทิ้งลงหลุมฝังกลบ</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════════════════
+     MODAL: LOGIN
+═══════════════════════════════════════ -->
+<div class="modal-back" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeLogin()"><i class="fa-solid fa-xmark"></i></button>
+    <div id="login-form-wrap" style="display: block;">
+      <div class="t-label mb12" style="color:var(--red)">Häfele GreenTrace</div>
+      <div class="t-title" style="margin-bottom:6px;">เข้าสู่ระบบ</div>
+      <div class="t-body" style="margin-bottom:22px;">เข้าสู่ระบบเพื่อดูข้อมูลและ Green Points ของคุณ</div>
+      <div class="login-form">
+        <div class="form-field">
+          <label>อีเมล / รหัสองค์กร</label>
+          <input type="email" placeholder="your@company.com">
+        </div>
+        <div class="form-field">
+          <label>รหัสผ่าน</label>
+          <input type="password" placeholder="••••••••">
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:18px;">
+          <span style="font-size:13px;color:var(--text3);cursor:pointer;">ลืมรหัสผ่าน?</span>
+        </div>
+        <button class="btn btn-red" style="width:100%;justify-content:center;padding:13px;" onclick="loginSuccess()">
+          <i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบ
+        </button>
+        <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--text3)">
+          ยังไม่มีบัญชี? <span style="color:var(--red);cursor:pointer;font-weight:600;">ติดต่อ Häfele Thailand</span>
+        </div>
+      </div>
+    </div>
+    <div id="login-success" style="display:none;text-align:center;padding:10px 0;">
+      <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <div class="t-section" style="margin-bottom:7px;">เข้าสู่ระบบสำเร็จ</div>
+      <div class="t-body" style="margin-bottom:22px;">ยินดีต้อนรับกลับ, UOB Thailand</div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="closeLogin()">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: REDEEM
+═══════════════════════════════════════ -->
+<div class="modal-back" id="redeem-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeRedeem()"><i class="fa-solid fa-xmark"></i></button>
+    <div id="redeem-form">
+      <div class="t-label mb12">ยืนยันการแลกรางวัล</div>
+      <div class="t-section mb12" id="m-title">ชื่อรางวัล</div>
+      <div class="card-inner" style="display:flex;justify-content:space-between;margin-bottom:20px;">
+        <span class="t-body">หักคะแนน</span>
+        <span style="font-weight:700;color:var(--green);" id="m-cost">0 GP</span>
+      </div>
+      <div class="login-form">
+        <div class="form-field">
+          <label>ที่อยู่จัดส่ง</label>
+          <input type="text" placeholder="ที่อยู่สำนักงาน, จังหวัด, รหัสไปรษณีย์">
+        </div>
+        <div class="form-field">
+          <label>รหัสยืนยัน PIN</label>
+          <input type="password" placeholder="••••">
+        </div>
+      </div>
+      <button class="btn btn-red" style="width:100%;justify-content:center;margin-top:8px;" onclick="confirmRedeem()">
+        <i class="fa-solid fa-lock"></i> ยืนยันการแลก
+      </button>
+    </div>
+    <div id="redeem-success" style="display:none;text-align:center;padding:10px 0;">
+      <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <div class="t-section" style="margin-bottom:7px;">แลกรางวัลสำเร็จ</div>
+      <div class="t-body" style="margin-bottom:22px;">หัก Green Points เรียบร้อยแล้ว</div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="closeRedeem()">กลับไป Marketplace</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: TIER BENEFITS
+═══════════════════════════════════════ -->
+<div class="tier-modal-back" id="tier-modal">
+  <div class="tier-modal">
+    <button class="modal-close" onclick="closeTierModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="t-label mb12" style="color:var(--red)">GreenTrace Membership Program</div>
+    <div class="t-title mb24">สิทธิประโยชน์ตามระดับ</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
+      <div class="tier-card">
+        <div class="tier-stripe" style="background:var(--text3)"></div>
+        <div class="t-section" style="margin-bottom:14px;">Tier 1 — Starter</div>
+        <ul>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--text3)"></i>GP สะสม ×1</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--text3)"></i>จัดส่งฟรีไม่มีขั้นต่ำ</li>
+        </ul>
+      </div>
+      <div class="tier-card active-tier">
+        <div class="tier-stripe" style="background:var(--red)"></div>
+        <div class="t-section" style="margin-bottom:5px;color:var(--red)">Tier 2 — Silver</div>
+        <div class="badge badge-red" style="margin-bottom:12px;">Active</div>
+        <ul>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--red)"></i>GP สะสม ×1.25</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--red)"></i>ส่วนลด 5%</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--red)"></i>Early Access จองสิทธิ์ล่วงหน้า</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--red)"></i>จัดส่งฟรีทุกคลัง</li>
+        </ul>
+      </div>
+      <div class="tier-card">
+        <div class="tier-stripe" style="background:var(--gold)"></div>
+        <div class="t-section" style="margin-bottom:14px;">Tier 3 — Gold</div>
+        <ul>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--gold)"></i>GP สะสม ×1.5</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--gold)"></i>Expert Consultation</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--gold)"></i>ส่วนลด 10%</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--gold)"></i>Verified Badge</li>
+        </ul>
+      </div>
+      <div class="tier-card">
+        <div class="tier-stripe" style="background:var(--green)"></div>
+        <div class="t-section" style="margin-bottom:14px;">Tier 4 — Platinum</div>
+        <ul>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--green)"></i>GP สะสม ×2.0</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--green)"></i>ส่วนลด 15%</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--green)"></i>Digital Certificate</li>
+          <li><i class="fa-solid fa-chevron-right" style="color:var(--green)"></i>ทดสอบผลิตภัณฑ์ก่อนใคร</li>
+        <li><i class="fa-solid fa-chevron-right" style="color:var(--green)"></i>Verified Badge</li><li><i class="fa-solid fa-chevron-right" style="color:var(--green)"></i>Expert Consultant</li></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── ROUTER ── */
+function go(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + id);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.np').forEach(n => n.classList.toggle('active', n.dataset.v === id));
+  document.querySelectorAll('.bnav').forEach(b => b.classList.toggle('active', b.dataset.v === id));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── THEME ── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const icon = document.getElementById('theme-icon');
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? 'light' : 'dark';
+  icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+
+/* ── LOGIN MODAL ── */
+function openLogin() {
+  document.getElementById('login-form-wrap').style.display = 'block';
+  document.getElementById('login-success').style.display = 'none';
+  document.getElementById('login-modal').classList.add('open');
+}
+function closeLogin() { document.getElementById('login-modal').classList.remove('open'); }
+function loginSuccess() {
+  document.getElementById('login-form-wrap').style.display = 'none';
+  document.getElementById('login-success').style.display = 'block';
+}
+document.getElementById('login-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeLogin(); });
+
+/* ── REDEEM MODAL ── */
+function openRedeem(name, cost) {
+  document.getElementById('m-title').textContent = name;
+  document.getElementById('m-cost').textContent = cost.toLocaleString() + ' GP';
+  document.getElementById('redeem-form').style.display = 'block';
+  document.getElementById('redeem-success').style.display = 'none';
+  document.getElementById('redeem-modal').classList.add('open');
+}
+function closeRedeem() { document.getElementById('redeem-modal').classList.remove('open'); }
+function confirmRedeem() {
+  document.getElementById('redeem-form').style.display = 'none';
+  document.getElementById('redeem-success').style.display = 'block';
+}
+document.getElementById('redeem-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeRedeem(); });
+
+/* ── TIER MODAL ── */
+function openTierModal() { document.getElementById('tier-modal').classList.add('open'); }
+function closeTierModal() { document.getElementById('tier-modal').classList.remove('open'); }
+document.getElementById('tier-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeTierModal(); });
+</script>
+
+</body>
+</html>
