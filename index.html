@@ -1191,6 +1191,48 @@ document.getElementById('redeem-modal').addEventListener('click', e => { if(e.ta
 /* ── TIER MODAL ── */
 function openTierModal() { document.getElementById('tier-modal').classList.add('open'); }
 function closeTierModal() { document.getElementById('tier-modal').classList.remove('open'); }
+   /* ── SURVEY MODAL LOGIC ── */
+function openSurveyModal() {
+  document.getElementById('survey-form-wrap').style.display = 'block';
+  document.getElementById('survey-success').style.display = 'none';
+  document.getElementById('survey-modal').classList.add('open');
+}
+
+function closeSurveyModal() {
+  document.getElementById('survey-modal').classList.remove('open');
+  const radios = document.querySelectorAll('input[name="travel_method"]');
+  radios.forEach(r => r.checked = false);
+  document.getElementById('other-input-wrap').style.display = 'none';
+  document.getElementById('other-travel-input').value = '';
+  document.getElementById('other-travel-input').required = false;
+}
+
+document.querySelectorAll('input[name="travel_method"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    const otherWrap = document.getElementById('other-input-wrap');
+    const otherInput = document.getElementById('other-travel-input');
+    if (this.value === 'อื่นๆ') {
+      otherWrap.style.display = 'block';
+      otherInput.required = true;
+      otherInput.focus();
+    } else {
+      otherWrap.style.display = 'none';
+      otherInput.required = false;
+      otherInput.value = '';
+    }
+  });
+});
+
+function submitSurvey(event) {
+  event.preventDefault();
+  document.getElementById('survey-form-wrap').style.display = 'none';
+  document.getElementById('survey-success').style.display = 'block';
+}
+
+document.getElementById('survey-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeSurveyModal();
+});
+   
 document.getElementById('tier-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeTierModal(); });
 </script>
 
