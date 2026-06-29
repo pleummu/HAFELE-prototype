@@ -1106,7 +1106,40 @@ hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
     </div>
   </div>
 </div>
+   
+<div class="modal-back" id="survey-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSurveyModal()"><i class="fa-solid fa-xmark"></i></button>
+    
+    <div id="survey-form-wrap">
+      <h3 class="t-title mb18">คุณเดินทางมาด้วยวิธีการใด?</h3>
+      <form onsubmit="submitSurvey(event)" class="login-form">
+        
+        <div class="form-field"><label><input type="radio" name="travel_method" value="เดิน" required> เดิน</label></div>
+        <div class="form-field"><label><input type="radio" name="travel_method" value="จักรยาน"> จักรยาน</label></div>
+        <div class="form-field"><label><input type="radio" name="travel_method" value="BTS/MRT"> BTS/MRT</label></div>
+        <div class="form-field"><label><input type="radio" name="travel_method" value="รถเมล์ EV"> รถเมล์ EV</label></div>
+        <div class="form-field"><label><input type="radio" name="travel_method" value="EV car service"> EV car service (Grab, etc.)</label></div>
+        <div class="form-field"><label><input type="radio" name="travel_method" value="รถส่วนตัว"> รถส่วนตัว (EV, hybrid, etc.)</label></div>
+        <div class="form-field"><label><input type="radio" name="travel_method" value="อื่นๆ"> ........อื่นๆ</label></div>
+        
+        <div class="form-field" id="other-input-wrap" style="display: none; margin-top: 10px;">
+          <input type="text" id="other-travel-input" placeholder="โปรดระบุวิธีการเดินทางของคุณ">
+        </div>
 
+        <button type="submit" class="login-btn" style="width: 100%; justify-content: center; margin-top: 24px;">ยืนยันข้อมูล</button>
+      </form>
+    </div>
+
+    <div id="survey-success" style="display: none; text-align: center; padding: 20px 0;">
+      <div class="success-icon" style="font-size: 48px; color: var(--green); margin-bottom: 16px;"><i class="fa-solid fa-circle-check"></i></div>
+      <h3 class="t-title mb12">ขอบคุณที่ร่วมตอบแบบสอบถาม!</h3>
+      <p class="t-body mb24">คุณได้รับ <strong>100 GP</strong> เรียบร้อยแล้ว</p>
+      <button class="btn btn-ghost" onclick="closeSurveyModal()">ปิดหน้าต่าง</button>
+    </div>
+    
+  </div>
+</div>
 <script>
 /* ── ROUTER ── */
 function go(id) {
