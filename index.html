@@ -480,9 +480,13 @@ hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
           ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-right"></i>
         </button>
          <div class="flex-gap mt-3" style="margin-top: 15px;">
-            <button class="btn btn-green" onclick="openSurveyModal()">Start Survey</button>
-            <button class="btn btn-ghost">ดูรายละเอียด</button>
-          </div>
+           <button class="btn btn-green btn-with-icon" onclick="openSurveyModal()">
+             <i class="fa-solid fa-file-signature"></i> Start Survey
+           </button>
+           <button class="btn btn-ghost btn-with-icon">
+            ดูรายละเอียด <i class="fa-solid fa-chevron-right"></i>
+         </button>
+</div>
       </div>
     </div>
   </div>
@@ -1107,34 +1111,96 @@ hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
   </div>
 </div>
    
-<div class="modal-back" id="survey-modal">
+<div class="modal-back survey-redesign" id="survey-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeSurveyModal()"><i class="fa-solid fa-xmark"></i></button>
     
     <div id="survey-form-wrap">
-      <h3 class="t-title mb18">คุณเดินทางมาด้วยวิธีการใด?</h3>
-      <form onsubmit="submitSurvey(event)" class="login-form">
+      <div class="modal-header-with-icon">
+        <div class="icon-bubble"><i class="fa-solid fa-route"></i></div>
+        <h3 class="t-title">คุณเดินทางมาด้วยวิธีการใด?</h3>
+      </div>
+      <form onsubmit="submitSurvey(event)" class="survey-form">
         
-        <div class="form-field"><label><input type="radio" name="travel_method" value="เดิน" required> เดิน</label></div>
-        <div class="form-field"><label><input type="radio" name="travel_method" value="จักรยาน"> จักรยาน</label></div>
-        <div class="form-field"><label><input type="radio" name="travel_method" value="BTS/MRT"> BTS/MRT</label></div>
-        <div class="form-field"><label><input type="radio" name="travel_method" value="รถเมล์ EV"> รถเมล์ EV</label></div>
-        <div class="form-field"><label><input type="radio" name="travel_method" value="EV car service"> EV car service (Grab, etc.)</label></div>
-        <div class="form-field"><label><input type="radio" name="travel_method" value="รถส่วนตัว"> รถส่วนตัว (EV, hybrid, etc.)</label></div>
-        <div class="form-field"><label><input type="radio" name="travel_method" value="อื่นๆ"> ........อื่นๆ</label></div>
-        
-        <div class="form-field" id="other-input-wrap" style="display: none; margin-top: 10px;">
-          <input type="text" id="other-travel-input" placeholder="โปรดระบุวิธีการเดินทางของคุณ">
+        <div class="survey-grid">
+          <label class="survey-card">
+            <input type="radio" name="travel_method" value="เดิน" required>
+            <div class="card-content">
+              <i class="fa-solid fa-person-walking"></i>
+              <span class="card-title">เดิน</span>
+              <span class="card-desc">เพื่อสุขภาพ</span>
+            </div>
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          </label>
+          <label class="survey-card">
+            <input type="radio" name="travel_method" value="จักรยาน">
+            <div class="card-content">
+              <i class="fa-solid fa-bicycle"></i>
+              <span class="card-title">จักรยาน</span>
+              <span class="card-desc">เป็นมิตรกับสิ่งแวดล้อม</span>
+            </div>
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          </label>
+          <label class="survey-card">
+            <input type="radio" name="travel_method" value="BTS/MRT">
+            <div class="card-content">
+              <i class="fa-solid fa-train"></i>
+              <span class="card-title">BTS/MRT</span>
+              <span class="card-desc">รวดเร็ว สะดวกสบาย</span>
+            </div>
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          </label>
+          <label class="survey-card">
+            <input type="radio" name="travel_method" value="รถเมล์ EV">
+            <div class="card-content">
+              <i class="fa-solid fa-bus"></i>
+              <span class="card-title">รถเมล์ EV</span>
+              <span class="card-desc">ลดมลพิษ</span>
+            </div>
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          </label>
+          <label class="survey-card">
+            <input type="radio" name="travel_method" value="EV car service">
+            <div class="card-content">
+              <i class="fa-solid fa-taxi"></i>
+              <span class="card-title">EV car service</span>
+              <span class="card-desc">เรียกง่าย ปลอดภัย</span>
+            </div>
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          </label>
+          <label class="survey-card">
+            <input type="radio" name="travel_method" value="รถส่วนตัว">
+            <div class="card-content">
+              <i class="fa-solid fa-car"></i>
+              <span class="card-title">รถส่วนตัว</span>
+              <span class="card-desc">สะดวกสบาย ลดการปล่อยก๊าซ</span>
+            </div>
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          </label>
+          <label class="survey-card" id="other-card">
+            <input type="radio" name="travel_method" value="อื่นๆ">
+            <div class="card-content">
+              <i class="fa-solid fa-question"></i>
+              <span class="card-title">......อื่นๆ</span>
+            </div>
+            <i class="fa-solid fa-circle-check check-icon"></i>
+          </label>
         </div>
 
-        <button type="submit" class="login-btn" style="width: 100%; justify-content: center; margin-top: 24px;">ยืนยันข้อมูล</button>
+        <button type="submit" class="login-btn survey-submit" style="width: 100%; justify-content: center; margin-top: 24px;">ยืนยันข้อมูล</button>
       </form>
     </div>
 
-    <div id="survey-success" style="display: none; text-align: center; padding: 20px 0;">
-      <div class="success-icon" style="font-size: 48px; color: var(--green); margin-bottom: 16px;"><i class="fa-solid fa-circle-check"></i></div>
-      <h3 class="t-title mb12">ขอบคุณที่ร่วมตอบแบบสอบถาม!</h3>
-      <p class="t-body mb24">คุณได้รับ <strong>100 GP</strong> เรียบร้อยแล้ว</p>
+    <div id="survey-success" style="display: none; text-align: center; padding: 30px 0;">
+      <div class="success-header-redesign">
+        <i class="fa-solid fa-party-horn success-icon-main"></i>
+        <h3 class="t-title mb12">ขอบคุณที่ร่วมสนุก!</h3>
+      </div>
+      <div class="gp-reward-bubble">
+        <span class="gp-reward-value">+ 100 GP</span>
+        <i class="fa-solid fa-coin gp-icon-redesign"></i>
+      </div>
+      <p class="t-body mb24" style="font-size: 1.1em; color: var(--green); font-weight: bold;">คุณได้รับ 100 GP เรียบร้อยแล้ว!</p>
       <button class="btn btn-ghost" onclick="closeSurveyModal()">ปิดหน้าต่าง</button>
     </div>
     
