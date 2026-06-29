@@ -1111,97 +1111,67 @@ hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
   </div>
 </div>
    
-<div class="modal-back survey-redesign" id="survey-modal">
+<div class="flex-gap mt-3" style="margin-top: 15px;">
+  <button class="btn btn-green btn-with-icon" onclick="openSurveyModal_Option2()">
+    <i class="fa-solid fa-file-signature"></i> Start Survey
+  </button>
+  <button class="btn btn-ghost btn-with-icon">
+    ดูรายละเอียด <i class="fa-solid fa-chevron-right"></i>
+  </button>
+</div>
+
+<div class="modal-back survey-modal-redesign" id="survey-modal-option2">
   <div class="modal">
-    <button class="modal-close" onclick="closeSurveyModal()"><i class="fa-solid fa-xmark"></i></button>
+    <button class="modal-close" onclick="closeSurveyModal_Option2()"><i class="fa-solid fa-xmark"></i></button>
     
-    <div id="survey-form-wrap">
+    <div id="survey-selection-option2">
       <div class="modal-header-with-icon">
         <div class="icon-bubble"><i class="fa-solid fa-route"></i></div>
         <h3 class="t-title">คุณเดินทางมาด้วยวิธีการใด?</h3>
       </div>
-      <form onsubmit="submitSurvey(event)" class="survey-form">
-        
-        <div class="survey-grid">
-          <label class="survey-card">
-            <input type="radio" name="travel_method" value="เดิน" required>
-            <div class="card-content">
-              <i class="fa-solid fa-person-walking"></i>
-              <span class="card-title">เดิน</span>
-              <span class="card-desc">เพื่อสุขภาพ</span>
-            </div>
-            <i class="fa-solid fa-circle-check check-icon"></i>
-          </label>
-          <label class="survey-card">
-            <input type="radio" name="travel_method" value="จักรยาน">
-            <div class="card-content">
-              <i class="fa-solid fa-bicycle"></i>
-              <span class="card-title">จักรยาน</span>
-              <span class="card-desc">เป็นมิตรกับสิ่งแวดล้อม</span>
-            </div>
-            <i class="fa-solid fa-circle-check check-icon"></i>
-          </label>
-          <label class="survey-card">
-            <input type="radio" name="travel_method" value="BTS/MRT">
-            <div class="card-content">
-              <i class="fa-solid fa-train"></i>
-              <span class="card-title">BTS/MRT</span>
-              <span class="card-desc">รวดเร็ว สะดวกสบาย</span>
-            </div>
-            <i class="fa-solid fa-circle-check check-icon"></i>
-          </label>
-          <label class="survey-card">
-            <input type="radio" name="travel_method" value="รถเมล์ EV">
-            <div class="card-content">
-              <i class="fa-solid fa-bus"></i>
-              <span class="card-title">รถเมล์ EV</span>
-              <span class="card-desc">ลดมลพิษ</span>
-            </div>
-            <i class="fa-solid fa-circle-check check-icon"></i>
-          </label>
-          <label class="survey-card">
-            <input type="radio" name="travel_method" value="EV car service">
-            <div class="card-content">
-              <i class="fa-solid fa-taxi"></i>
-              <span class="card-title">EV car service</span>
-              <span class="card-desc">เรียกง่าย ปลอดภัย</span>
-            </div>
-            <i class="fa-solid fa-circle-check check-icon"></i>
-          </label>
-          <label class="survey-card">
-            <input type="radio" name="travel_method" value="รถส่วนตัว">
-            <div class="card-content">
-              <i class="fa-solid fa-car"></i>
-              <span class="card-title">รถส่วนตัว</span>
-              <span class="card-desc">สะดวกสบาย ลดการปล่อยก๊าซ</span>
-            </div>
-            <i class="fa-solid fa-circle-check check-icon"></i>
-          </label>
-          <label class="survey-card" id="other-card">
-            <input type="radio" name="travel_method" value="อื่นๆ">
-            <div class="card-content">
-              <i class="fa-solid fa-question"></i>
-              <span class="card-title">......อื่นๆ</span>
-            </div>
-            <i class="fa-solid fa-circle-check check-icon"></i>
-          </label>
-        </div>
-
-        <button type="submit" class="login-btn survey-submit" style="width: 100%; justify-content: center; margin-top: 24px;">ยืนยันข้อมูล</button>
-      </form>
+      
+      <div class="survey-timeline">
+        <label class="survey-timeline-item">
+          <input type="radio" name="travel_method_v2" value="เดิน" required>
+          <div class="timeline-content">
+            <i class="fa-solid fa-person-walking"></i>
+            <span class="timeline-title">เดิน</span>
+          </div>
+        </label>
+        <label class="survey-timeline-item">
+          <input type="radio" name="travel_method_v2" value="จักรยาน">
+          <div class="timeline-content">
+            <i class="fa-solid fa-bicycle"></i>
+            <span class="timeline-title">จักรยาน</span>
+          </div>
+        </label>
+        <label class="survey-timeline-item" id="other-timeline-item-v2">
+          <input type="radio" name="travel_method_v2" value="อื่นๆ">
+          <div class="timeline-content">
+            <i class="fa-solid fa-question"></i>
+            <span class="timeline-title">อื่นๆ</span>
+          </div>
+        </label>
+      </div>
     </div>
 
-    <div id="survey-success" style="display: none; text-align: center; padding: 30px 0;">
-      <div class="success-header-redesign">
-        <i class="fa-solid fa-party-horn success-icon-main"></i>
-        <h3 class="t-title mb12">ขอบคุณที่ร่วมสนุก!</h3>
+    <div id="survey-other-input-option2" style="display: none;">
+      <div class="modal-header-with-icon">
+        <div class="icon-bubble"><i class="fa-solid fa-route"></i></div>
+        <h3 class="t-title">โปรดระบุวิธีการเดินทาง</h3>
       </div>
-      <div class="gp-reward-bubble">
-        <span class="gp-reward-value">+ 100 GP</span>
-        <i class="fa-solid fa-coin gp-icon-redesign"></i>
+      <div class="form-field other-input-wrap-v1">
+        <input type="text" id="other-travel-input-v1" placeholder="โปรดระบุวิธีการเดินทางของคุณ">
+        <button class="btn btn-green other-confirm-v1" onclick="submitOtherSurvey_Option1()">ยืนยัน</button>
       </div>
-      <p class="t-body mb24" style="font-size: 1.1em; color: var(--green); font-weight: bold;">คุณได้รับ 100 GP เรียบร้อยแล้ว!</p>
-      <button class="btn btn-ghost" onclick="closeSurveyModal()">ปิดหน้าต่าง</button>
+    </div>
+
+    <div id="survey-success-option2" style="display: none; text-align: center; padding: 30px 0;">
+      <div class="success-icon-animated"><i class="fa-solid fa-party-horn"></i></div>
+      <h3 class="t-title">ขอบคุณที่ร่วมสนุก!</h3>
+      <div class="gp-reward-large">+ 100 GP</div>
+      <p class="t-body" style="font-size: 1.1em; color: var(--green);">คุณได้รับ 100 GP เรียบร้อยแล้ว!</p>
+      <button class="btn btn-ghost" onclick="closeSurveyModal_Option2()">ปิดหน้าต่าง</button>
     </div>
     
   </div>
